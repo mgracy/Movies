@@ -1,3 +1,5 @@
 django
 pymysql
 Pillow
+beautifulsoup4
+lxml
