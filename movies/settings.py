@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'onlineVideos',
 ]
 
 MIDDLEWARE = [
@@ -84,11 +85,11 @@ WSGI_APPLICATION = 'movies.wsgi.application'
 DATABASES = {
     'default':{
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': account.db_host,
         'NAME': account.db_name,
         'USER': account.db_user,
         'PASSWORD': account.db_password,
-        'PORT': account.db_port
+        'HOST': account.db_host,
+        'PORT': account.db_port,
     }
 }
 
