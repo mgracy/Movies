@@ -5,7 +5,10 @@
 """
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
-import re
+from lxml import etree
+from .models import Movies
+from django.utils.timezone import now
+from decimal import Decimal
 
 
 class Spiders:
@@ -20,31 +23,16 @@ class Spiders:
         html = response.read().decode('GBK')
         return html
 
-
     def get_movie_cover(self, html):
-        soup = BeautifulSoup(html, 'lxml')
-        title = soup.title.text
-        meta_description = ""
-        meta_keywords = ""
-        print(title)
-        metas = soup.find('head').find_all('meta')
-        print(metas)
-        print('--'*40)
-        for i in metas:
-            # print(str(i))
-            if 'keywords' in str(i):
-                meta_keywords = i.attrs['content']
-            elif 'description' in str(i):
-                meta_description = i.attrs['content']
+        html = etree.HTML(html)
+        title = html.xpath('/html/head/title/text()')[0]
+        meta_description = html.xpath('/html/head/meta[2]')[0].attrib["content"]
+        meta_keywords = html.xpath('/html/head/meta[3]')[0].attrib["content"]
 
-        print(meta_description, meta_keywords)
-        # _ = soup.find(id='topInfo') #.find_all("div")
-        _ = soup.find_all('div', class_='info')
-        print(_)
+        return title, meta_description, meta_keywords
+
 
 
 spider = Spiders("http://tv.sohu.com/s2014/dsjdecrswsj/")
 html = spider.get_html()
-spider.get_movie_cover(html)
-
-
+title, meta_description, meta_keywords = spider.get_movie_cover(html)
